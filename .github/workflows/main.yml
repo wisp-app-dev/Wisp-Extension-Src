@@ -1,0 +1,37 @@
+name: Décompresser l'extension
+
+on:
+  push:
+    paths: ['*.zip']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  DOSSIER: Wisp-1.7.1
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Décompresser le zip de l'extension
+        run: |
+          ZIP=$(ls -t *.zip 2>/dev/null | head -1)
+          echo "zip trouvé : $ZIP"
+          [ -n "$ZIP" ] || { echo "::error::Aucun zip à la racine du dépôt"; exit 1; }
+          rm -rf "$DOSSIER" extension
+          mkdir "$DOSSIER"
+          unzip -q "$ZIP" -d "$DOSSIER"
+          [ -f "$DOSSIER/manifest.json" ] || { echo "::error::manifest.json absent : ce n'est pas le zip de l'extension"; exit 1; }
+          ls -la "$DOSSIER"
+
+      - name: Enregistrer les fichiers dans le dépôt
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Extension décompressée" || echo "Rien à enregistrer"
+          git push
