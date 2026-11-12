@@ -1,8 +1,8 @@
-name: Name change
+name: Décompresser l'extension
 
 on:
   push:
-    paths: ['*.zip']
+    paths: ['**.zip']
   workflow_dispatch:
 
 permissions:
@@ -19,9 +19,11 @@ jobs:
 
       - name: Décompresser le zip de l'extension
         run: |
-          ZIP=$(ls -t *.zip 2>/dev/null | head -1)
+          echo "Fichiers du dépôt :"
+          find . -path ./.git -prune -o -type f -name '*.zip' -print
+          ZIP=$(find . -path ./.git -prune -o -path "./$DOSSIER" -prune -o -type f -iname '*.zip' -print | head -1)
           echo "zip trouvé : $ZIP"
-          [ -n "$ZIP" ] || { echo "::error::Aucun zip à la racine du dépôt"; exit 1; }
+          [ -n "$ZIP" ] || { echo "::error::Aucun zip dans le dépôt. Envoyez wisp-1.7.1.zip puis relancez."; exit 1; }
           rm -rf "$DOSSIER" extension
           mkdir "$DOSSIER"
           unzip -q "$ZIP" -d "$DOSSIER"
