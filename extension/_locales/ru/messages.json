@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Wisp",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Блокирует рекламу, всплывающие окна, Яндекс Директ и трекеры. Лёгкий веб, как призрак.",
+    "description": "Short description shown in the Chrome Web Store"
+  }
+}

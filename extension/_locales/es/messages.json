@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Wisp",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Bloquea anuncios, ventanas emergentes, Yandex Direct y rastreadores. Navega ligero, como un fantasma.",
+    "description": "Short description shown in the Chrome Web Store"
+  }
+}

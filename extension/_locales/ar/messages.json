@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Wisp",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "يحظر الإعلانات والنوافذ المنبثقة وYandex Direct وأدوات التتبع. تصفّح بخفة كالشبح.",
+    "description": "Short description shown in the Chrome Web Store"
+  }
+}

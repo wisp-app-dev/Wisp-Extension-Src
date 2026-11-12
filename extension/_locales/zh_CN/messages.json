@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Wisp",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "拦截广告、弹窗、Yandex Direct 和跟踪器。像幽灵一样轻盈地浏览网页。",
+    "description": "Short description shown in the Chrome Web Store"
+  }
+}
