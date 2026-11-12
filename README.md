@@ -8,5 +8,5 @@ https://www.get-wisp-app.com/
 Extension :
 https://chromewebstore.google.com/detail/dlfnhnangapojnglnpgoahjeeldaebdb?utm_source=item-share-cb
 
-Version actuelle : 1.7.0
+Version actuelle : 1.7.1
 
