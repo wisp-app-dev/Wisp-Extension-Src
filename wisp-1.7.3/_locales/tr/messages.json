@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Wisp",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Reklamları, açılır pencereleri, Yandex Direct'i ve izleyicileri engeller. Hayalet gibi hafif gezin.",
+    "description": "Short description shown in the Chrome Web Store"
+  }
+}
