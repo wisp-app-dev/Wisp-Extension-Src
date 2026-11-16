@@ -1,0 +1,66 @@
+name: Décompresser les zip
+
+on:
+  push:
+    paths:
+      - "**.zip"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Décompresser chaque zip ajouté ou modifié
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+
+          # Zips ajoutés/modifiés par ce push (sinon, tous les zips du dépôt)
+          if [ -n "${BEFORE:-}" ] && ! echo "$BEFORE" | grep -qE '^0+$' && git cat-file -e "$BEFORE" 2>/dev/null; then
+            git diff --name-only --diff-filter=AM "$BEFORE" HEAD -- '*.zip' > zips.txt
+          else
+            git ls-files '*.zip' > zips.txt
+          fi
+
+          while IFS= read -r zip; do
+            [ -f "$zip" ] || continue
+            dir="$(dirname "$zip")/$(basename "$zip" .zip)"
+            dir="${dir#./}"
+            echo "→ $zip  =>  $dir/"
+
+            # Remplace l'ancien dossier pour que les fichiers supprimés disparaissent
+            rm -rf "$dir"
+            mkdir -p "$dir"
+            unzip -q -o "$zip" -d "$dir"
+            rm -rf "$dir/__MACOSX"
+
+            # Si le zip contient un seul dossier racine, on remonte son contenu
+            if [ "$(find "$dir" -mindepth 1 -maxdepth 1 | wc -l)" -eq 1 ] && [ -d "$(find "$dir" -mindepth 1 -maxdepth 1)" ]; then
+              inner="$(find "$dir" -mindepth 1 -maxdepth 1)"
+              shopt -s dotglob
+              mv "$inner"/* "$dir"/
+              rmdir "$inner"
+              shopt -u dotglob
+            fi
+          done < zips.txt
+          rm -f zips.txt
+
+      - name: Enregistrer les fichiers décompressés
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Rien à enregistrer."
+          else
+            git commit -m "Décompression automatique des zip [skip ci]"
+            git push
+          fi
